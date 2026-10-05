@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 @pytest.mark.order(1)
 def test_login():
@@ -20,19 +21,18 @@ def test_login():
         
         usuario.send_keys("standard_user")
         contraseña.send_keys("secret_sauce")
-        boton_login.click()
-        
+        boton_login.click()  
         assert driver.current_url=="https://www.saucedemo.com/inventory.html",\
-            print("Login fallido,URL no esperada.")
+        print("Login fallido,URL no esperada.")
         print("\nLogin correcto.")
+    
         
-        header=driver.find_element(By.CLASS_NAME,"app_logo"),\
-            print("Validacion de seccion fallida")
+        header=wait.until(EC.presence_of_element_located((By.CLASS_NAME,"app_logo")))  
         assert header.text == "Swag Labs"
             
-        seccion =driver.find_element(By.CLASS_NAME,"title"),\
-            print("Validacion de titulo fallida")
+        seccion =wait.until(EC.presence_of_element_located((By.CLASS_NAME,"title")))  
         assert seccion.text == "Products"
         print("Verificacion de seccion correcta.")
+   
     finally:
         driver.quit()
