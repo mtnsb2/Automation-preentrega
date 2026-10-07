@@ -1,27 +1,27 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.mark.order(2)
 def test_inventorio():
 
     driver = webdriver.Firefox()
-    
+    driver.implicitly_wait(5)
+    wait = WebDriverWait(driver,5)
     try:
 
         driver.get("https://www.saucedemo.com/")
-        time.sleep(3)
-
-        usuario=driver.find_element(By.ID,"user-name")
-        contraseña=driver.find_element(By.ID,"password")
-        boton_login=driver.find_element(By.ID,"login-button")
+        
+        usuario=wait.until(EC.presence_of_element_located((By.ID,"user-name")))
+        contraseña=wait.until(EC.presence_of_element_located((By.ID,"password")))
+        boton_login=wait.until(EC.element_to_be_clickable((By.ID,"login-button")))
         
         usuario.send_keys("standard_user")
         contraseña.send_keys("secret_sauce")
         boton_login.click()
-        time.sleep(3)
-
+    
         assert driver.title == "Swag Labs"
         print("\nSeccion correcta.")
         
@@ -40,9 +40,11 @@ def test_inventorio():
         
         menu =driver.find_element(By.ID, "react-burger-menu-btn")
         assert menu.is_displayed()
+        print("Menu encontrado.")
         
         filtro =driver.find_element(By.CLASS_NAME, "product_sort_container")
         assert filtro.is_displayed()
+        print("Filtro encontrado.")
         
     finally:
         driver.quit()
